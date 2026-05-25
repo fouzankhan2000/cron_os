@@ -1,11 +1,15 @@
-const BASE = `https://api.github.com/repos/${process.env.GITHUB_OWNER}/${process.env.GITHUB_REPO}/contents`
+const BASE = `https://api.github.com/repos/${process.env.GH_OWNER}/${process.env.GH_REPO}/contents`;
 const HEADERS = {
-  Authorization: `token ${process.env.GITHUB_TOKEN}`,
-  Accept: 'application/vnd.github.v3+json',
-  'Content-Type': 'application/json',
-}
+  Authorization: `token ${process.env.GH_TOKEN}`,
+  Accept: "application/vnd.github.v3+json",
+  "Content-Type": "application/json",
+};
 
-function workflowContent(job: { id: string; name: string; schedule: string }): string {
+function workflowContent(job: {
+  id: string;
+  name: string;
+  schedule: string;
+}): string {
   return `name: CronOS - ${job.name}
 on:
   schedule:
@@ -22,45 +26,56 @@ jobs:
             -H "Authorization: Bearer \${{ secrets.CRONOS_SECRET }}" \\
             -H "Content-Type: application/json" \\
             --fail-with-body
-`
+`;
 }
 
 async function getFileSHA(path: string): Promise<string | null> {
-  const res = await fetch(`${BASE}/${path}`, { headers: HEADERS })
-  if (!res.ok) return null
-  const data = await res.json()
-  return data.sha || null
+  const res = await fetch(`${BASE}/${path}`, { headers: HEADERS });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.sha || null;
 }
 
-export async function createWorkflow(job: { id: string; name: string; schedule: string }) {
-  const path = `.github/workflows/cronos-${job.id}.yml`
-  const content = Buffer.from(workflowContent(job)).toString('base64')
+export async function createWorkflow(job: {
+  id: string;
+  name: string;
+  schedule: string;
+}) {
+  const path = `.github/workflows/cronos-${job.id}.yml`;
+  const content = Buffer.from(workflowContent(job)).toString("base64");
   await fetch(`${BASE}/${path}`, {
-    method: 'PUT',
+    method: "PUT",
     headers: HEADERS,
     body: JSON.stringify({ message: `Add CronOS job: ${job.name}`, content }),
-  })
-  return path
+  });
+  return path;
 }
 
-export async function updateWorkflow(job: { id: string; name: string; schedule: string }, currentPath: string) {
-  const sha = await getFileSHA(currentPath)
-  if (!sha) return currentPath
-  const content = Buffer.from(workflowContent(job)).toString('base64')
+export async function updateWorkflow(
+  job: { id: string; name: string; schedule: string },
+  currentPath: string,
+) {
+  const sha = await getFileSHA(currentPath);
+  if (!sha) return currentPath;
+  const content = Buffer.from(workflowContent(job)).toString("base64");
   await fetch(`${BASE}/${currentPath}`, {
-    method: 'PUT',
+    method: "PUT",
     headers: HEADERS,
-    body: JSON.stringify({ message: `Update CronOS job: ${job.name}`, content, sha }),
-  })
-  return currentPath
+    body: JSON.stringify({
+      message: `Update CronOS job: ${job.name}`,
+      content,
+      sha,
+    }),
+  });
+  return currentPath;
 }
 
 export async function deleteWorkflow(path: string) {
-  const sha = await getFileSHA(path)
-  if (!sha) return
+  const sha = await getFileSHA(path);
+  if (!sha) return;
   await fetch(`${BASE}/${path}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: HEADERS,
     body: JSON.stringify({ message: `Delete CronOS job`, sha }),
-  })
+  });
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { chatCompletion } from '@/lib/openai'
-import { supabaseAdmin } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
 const SYSTEM_PROMPT = `You are CronOS. Apply the user's requested changes to the existing cron job config.
 Only change what was asked. Keep everything else exactly as it was.

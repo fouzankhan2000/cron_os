@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { createWorkflow, updateWorkflow, deleteWorkflow } from '@/lib/github'
 
 export async function PATCH(

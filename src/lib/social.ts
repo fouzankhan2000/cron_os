@@ -1,6 +1,6 @@
 import { chatWithSearch } from './openai'
 import { getOrBuildPlaybook, injectPlaybookRules } from './playbook'
-import { supabaseAdmin } from './supabase'
+import { supabaseAdmin } from './supabase-admin'
 import { sendContentToTelegram } from './telegram'
 import { CronJob } from './types'
 

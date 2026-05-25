@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { chatWithSearch } from '@/lib/openai'
 import { sendTelegramNotification } from '@/lib/telegram'
 import { executeStoryteller } from '@/lib/storyteller'

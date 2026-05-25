@@ -1,8 +1,13 @@
 import OpenAI from 'openai'
 
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+let _openai: OpenAI | null = null
+
+function getOpenAI(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  }
+  return _openai
+}
 
 // Standard call wrapper
 export async function chatCompletion(
@@ -10,7 +15,7 @@ export async function chatCompletion(
   systemPrompt: string,
   maxTokens = 1500
 ): Promise<string> {
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: 'gpt-4o-mini',
     max_tokens: maxTokens,
     messages: [
@@ -27,7 +32,7 @@ export async function chatWithSearch(
   systemPrompt: string,
   maxTokens = 1500
 ): Promise<string> {
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: 'gpt-4o-mini',
     max_tokens: maxTokens,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

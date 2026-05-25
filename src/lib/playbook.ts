@@ -1,4 +1,4 @@
-import { supabaseAdmin } from './supabase'
+import { supabaseAdmin } from './supabase-admin'
 import { chatWithSearch } from './openai'
 import { PlatformPlaybook } from './types'
 

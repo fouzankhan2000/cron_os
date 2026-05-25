@@ -19,7 +19,7 @@
    - Contents: Read and write
    - Actions: Read and write
 5. Generate token -> copy it immediately (shown once)
-6. This is your `GITHUB_TOKEN` env var
+6. This is your `GH_TOKEN` env var
 
 ## Step 3 -- Deploy to Vercel
 
@@ -30,17 +30,17 @@ vercel
 
 In the Vercel dashboard -> your project -> Settings -> Environment Variables, add all of these:
 
-| Key | Value |
-|-----|-------|
-| `NEXT_PUBLIC_SUPABASE_URL` | from Supabase project settings |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | from Supabase project settings |
-| `SUPABASE_SERVICE_KEY` | from Supabase -> Settings -> API -> service_role key |
-| `OPENAI_API_KEY` | from platform.openai.com |
-| `GITHUB_TOKEN` | the PAT from step 2 |
-| `GITHUB_OWNER` | your GitHub username |
-| `GITHUB_REPO` | cronos-workflows |
-| `NEXT_PUBLIC_APP_URL` | your Vercel deployment URL e.g. `https://cronos-fouzan.vercel.app` |
-| `CRONOS_SECRET` | same value you added to GitHub secrets |
+| Key                             | Value                                                              |
+| ------------------------------- | ------------------------------------------------------------------ |
+| `NEXT_PUBLIC_SUPABASE_URL`      | from Supabase project settings                                     |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | from Supabase project settings                                     |
+| `SUPABASE_SERVICE_KEY`          | from Supabase -> Settings -> API -> service_role key               |
+| `OPENAI_API_KEY`                | from platform.openai.com                                           |
+| `GH_TOKEN`                      | the PAT from step 2                                                |
+| `GH_OWNER`                      | your GitHub username                                               |
+| `GH_REPO`                       | cronos-workflows                                                   |
+| `NEXT_PUBLIC_APP_URL`           | your Vercel deployment URL e.g. `https://cronos-fouzan.vercel.app` |
+| `CRONOS_SECRET`                 | same value you added to GitHub secrets                             |
 
 Redeploy after adding env vars:
 

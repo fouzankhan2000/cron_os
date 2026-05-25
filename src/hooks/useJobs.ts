@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { CronJob } from '@/lib/types'
 
 export function useJobs() {
+  const id = useId()
   const [jobs, setJobs] = useState<CronJob[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -27,7 +28,7 @@ export function useJobs() {
     fetchJobs()
 
     const channel = supabase
-      .channel('cron_jobs_changes')
+      .channel(`cron_jobs_changes_${id}`)
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'cron_jobs' },

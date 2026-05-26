@@ -24,6 +24,7 @@ Return ONLY valid JSON — no markdown, no backticks:
 Rules:
 - Max 3 questions. Only ask what genuinely changes output quality.
 - Prefer "select" with 2-4 options. Use "text" only for open-ended specifics (URL, email).
+- For time/schedule questions, ALWAYS use "select" with options like: ["Morning (9am)", "Afternoon (12pm)", "Evening (5pm)", "Night (8pm)"].
 - If description is already specific enough, return needs_clarification: false.
 - For social/storyteller: ask tone if missing, format (thread vs single) if missing, time if missing.
 - For AI: ask where output goes (email/Telegram/just log) if not mentioned.

@@ -30,6 +30,10 @@ Common schedules:
 - Sunday midnight: 0 0 * * 0
 - Every 5 min minimum (GitHub Actions limit)`
 
+function stripMarkdownFences(text: string): string {
+  return text.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim()
+}
+
 export async function POST(request: Request) {
   const { description, answers } = await request.json()
 
@@ -45,13 +49,19 @@ export async function POST(request: Request) {
     userMessage += `\n\nAdditional details from user:\n${answerLines}`
   }
 
-  const raw = await chatCompletion(
-    [{ role: 'user', content: userMessage }],
-    SYSTEM_PROMPT
-  )
+  let raw: string
+  try {
+    raw = await chatCompletion(
+      [{ role: 'user', content: userMessage }],
+      SYSTEM_PROMPT
+    )
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'OpenAI request failed'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 
   try {
-    const parsed = JSON.parse(raw)
+    const parsed = JSON.parse(stripMarkdownFences(raw))
     return NextResponse.json(parsed)
   } catch {
     return NextResponse.json({ error: 'Failed to generate config' }, { status: 500 })

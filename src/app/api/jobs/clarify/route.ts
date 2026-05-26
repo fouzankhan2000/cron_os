@@ -35,6 +35,10 @@ Type detection rules:
 - social = post on Twitter/X or LinkedIn (one-off topic)
 - storyteller = rotating build-in-public content about products`
 
+function stripMarkdownFences(text: string): string {
+  return text.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim()
+}
+
 export async function POST(request: Request) {
   const { description } = await request.json()
 
@@ -42,13 +46,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Description is required' }, { status: 400 })
   }
 
-  const raw = await chatCompletion(
-    [{ role: 'user', content: description }],
-    SYSTEM_PROMPT
-  )
+  let raw: string
+  try {
+    raw = await chatCompletion(
+      [{ role: 'user', content: description }],
+      SYSTEM_PROMPT
+    )
+  } catch {
+    return NextResponse.json({ needs_clarification: false, questions: [] })
+  }
 
   try {
-    const parsed = JSON.parse(raw)
+    const parsed = JSON.parse(stripMarkdownFences(raw))
     return NextResponse.json(parsed)
   } catch {
     return NextResponse.json({ needs_clarification: false, questions: [] })

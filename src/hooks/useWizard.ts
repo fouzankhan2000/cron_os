@@ -104,6 +104,10 @@ export function useWizard() {
           body: JSON.stringify({ description: state.description }),
         })
         const genData = await genRes.json()
+        if (genData.error) {
+          dispatch({ type: 'SET_ERROR', payload: genData.error })
+          return
+        }
         dispatch({ type: 'SET_GENERATED_CONFIG', payload: genData })
         dispatch({ type: 'GO_TO_STEP', payload: 2 })
       }
@@ -124,6 +128,10 @@ export function useWizard() {
         }),
       })
       const data = await res.json()
+      if (data.error) {
+        dispatch({ type: 'SET_ERROR', payload: data.error })
+        return
+      }
       dispatch({ type: 'SET_GENERATED_CONFIG', payload: data })
       dispatch({ type: 'NEXT_STEP' })
     } catch {

@@ -97,7 +97,14 @@ export function useWizard() {
         dispatch({ type: 'SET_CLARIFY_QUESTIONS', payload: data.questions })
         dispatch({ type: 'NEXT_STEP' })
       } else {
-        dispatch({ type: 'SET_GENERATED_CONFIG', payload: data.config || {} })
+        // No clarification needed — generate config directly
+        const genRes = await fetch('/api/jobs/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ description: state.description }),
+        })
+        const genData = await genRes.json()
+        dispatch({ type: 'SET_GENERATED_CONFIG', payload: genData })
         dispatch({ type: 'GO_TO_STEP', payload: 2 })
       }
     } catch {
@@ -117,7 +124,7 @@ export function useWizard() {
         }),
       })
       const data = await res.json()
-      dispatch({ type: 'SET_GENERATED_CONFIG', payload: data.config || {} })
+      dispatch({ type: 'SET_GENERATED_CONFIG', payload: data })
       dispatch({ type: 'NEXT_STEP' })
     } catch {
       dispatch({ type: 'SET_ERROR', payload: 'Failed to generate config' })
